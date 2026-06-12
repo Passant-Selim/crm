@@ -11,12 +11,15 @@ app.use(globalErrorHandler);
 const dbConnection = require("./config/db");
 dbConnection();
 
-app.use(globalErrorHandler);
 
 const authRoutes = require("./routes/authRoutes");
 const userRoutes = require("./routes/userRoutes");
+// const leadRoutes = require("./routes/leadRoutes");
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
+// app.use("/api/leads", leadRoutes);
+
+app.use(globalErrorHandler);
 
 app.all(/(.*)/, (req, res, next) => {
     next ( new AppError("Not found", 404));

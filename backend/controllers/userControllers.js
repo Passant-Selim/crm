@@ -3,25 +3,42 @@ const bcrypt = require("bcryptjs");
 const AppError = require("../utils/AppError");
 
 const createUser = async (req, res, next) => {
-    try {
+  try {
     const { name, email, password, role } = req.body;
 
-    
-    const existingUser = await User.findOne({ email });
+    if (!name || !email || !password || !role) {
+      return next(
+        new AppError(
+          "All fields are required",
+          400
+        )
+      );
+    }
+
+    const existingUser = await User.findOne({
+      email,
+    });
+
     if (existingUser) {
       return next(
-        new AppError("Email already exists", 400)
+        new AppError(
+          "Email already exists",
+          400
+        )
       );
     }
 
     if (role === "super-admin") {
-      return next(new AppError("Cannot create super admin", 403));
+      return next(
+        new AppError(
+          "Cannot create super admin",
+          403
+        )
+      );
     }
 
-    const hashedPassword = await bcrypt.hash(
-      password,
-      10
-    );
+    const hashedPassword =
+      await bcrypt.hash(password, 10);
 
     const user = await User.create({
       name,
@@ -30,26 +47,38 @@ const createUser = async (req, res, next) => {
       role,
     });
 
-    const userResponse = {
-      _id: user._id,
-      name: user.name,
-      email: user.email,
-      role: user.role,
-      createdAt: user.createdAt,
-    };
-
     res.status(201).json({
-      message: "User created successfully",
-      user: userResponse,
-    })
+      message:
+        "User created successfully",
+      user: {
+        _id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+      },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
 
+const getAllUsers = async (req, res, next) => {
+  try {
+    const users = await User.find()
+      .select("-password");
 
-    } catch (error) {
-        next(error);
-    }
-}
+    res.status(200).json({
+      count: users.length,
+      users,
+    });
+
+  } catch (error) {
+    next(error);
+  }
+};
 
 
 module.exports = {
-    createUser,
+  createUser,
+  getAllUsers
 }

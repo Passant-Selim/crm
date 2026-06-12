@@ -36,6 +36,16 @@ const userSchema = new mongoose.Schema(
       enum: ["super-admin", "admin", "data-entry", "agent"],
       default: "agent",
     },
+    assignedAdmin: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      default: null
+    },
+    isActive: {
+      type: Boolean,
+      default: true,
+    },
+
   },
   { timestamps: true },
 );
