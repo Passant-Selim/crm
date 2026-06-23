@@ -7,6 +7,7 @@ const globalErrorHandler = require("./middlewares/globalErrorHandler");
 
 app.use(express.json());
 app.use(globalErrorHandler);
+app.use("/uploads", express.static("uploads"));
 
 const dbConnection = require("./config/db");
 dbConnection();
@@ -14,10 +15,14 @@ dbConnection();
 
 const authRoutes = require("./routes/authRoutes");
 const userRoutes = require("./routes/userRoutes");
-// const leadRoutes = require("./routes/leadRoutes");
+const teamRoutes = require("./routes/teamRoutes");
+const propertyRoutes = require("./routes/propertyRoutes");
+const leadRoutes = require("./routes/leadRoutes");
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
-// app.use("/api/leads", leadRoutes);
+app.use("/api/teams", teamRoutes);
+app.use("/api/properties", propertyRoutes);
+app.use("/api/leads", leadRoutes);
 
 app.use(globalErrorHandler);
 

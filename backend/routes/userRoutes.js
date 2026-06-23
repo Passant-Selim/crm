@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { createUser, getAllUsers } = require("../controllers/userControllers");
+const { createUser, getAllUsers, getUserById, updateUser, deleteUser } = require("../controllers/userControllers");
 const authMiddleware = require("../middlewares/authMiddleware");
 const authorize = require("../middlewares/authorize");
 
@@ -19,6 +19,25 @@ router.get(
   getAllUsers
 );
 
+router.get(
+  "/:id",
+  authMiddleware,
+  authorize("super-admin"),
+  getUserById
+);
 
+router.patch(
+  "/:id",
+  authMiddleware,
+  authorize("super-admin"),
+  updateUser
+);
+
+router.delete(
+  "/:id",
+  authMiddleware,
+  authorize("super-admin"),
+  deleteUser
+);
 
 module.exports = router;

@@ -33,19 +33,18 @@ const userSchema = new mongoose.Schema(
     },
     role: {
       type: String,
-      enum: ["super-admin", "admin", "data-entry", "agent"],
+      enum: ["super-admin", "team-leader", "data-entry", "agent"],
       default: "agent",
     },
-    assignedAdmin: {
+    team: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
-      default: null
+      ref: "Team",
+      default: null,
     },
     isActive: {
       type: Boolean,
       default: true,
     },
-
   },
   { timestamps: true },
 );
