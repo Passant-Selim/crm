@@ -18,11 +18,13 @@ const userRoutes = require("./routes/userRoutes");
 const teamRoutes = require("./routes/teamRoutes");
 const propertyRoutes = require("./routes/propertyRoutes");
 const leadRoutes = require("./routes/leadRoutes");
+const agentRoutes = require("./routes/agentRoutes");
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/teams", teamRoutes);
 app.use("/api/properties", propertyRoutes);
 app.use("/api/leads", leadRoutes);
+app.use("/api/agents", agentRoutes);
 
 app.use(globalErrorHandler);
 
