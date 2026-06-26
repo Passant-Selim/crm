@@ -145,6 +145,28 @@ const updateLead = async (req, res, next) => {
       }
     }
 
+    if (req.user.role === "agent") {
+      queryFilter.assignedTo = req.user.id;
+
+      if (req.body.dealStatus && ["won", "lost"].includes(req.body.dealStatus)) {
+        return next(new AppError("Agents are not allowed to set deal status to 'won' or 'lost' directly. This requires Team Leader approval.", 403));
+      }
+
+      const allowedUpdates = ["status", "dealStatus"];
+      const updates = Object.keys(req.body);
+
+      updates.forEach((update) => {
+        if (!allowedUpdates.includes(update)) {
+          delete req.body[update];
+        }
+      });
+
+      if (Object.keys(req.body).length === 0) {
+        return next(new AppError("Agents are only allowed to update 'status' and 'dealStatus'", 400));
+      }
+    }
+
+
     if (req.user.role === "super-admin" && req.body.assignedTo) {
       const agent = await User.findById(req.body.assignedTo);
       
@@ -161,7 +183,7 @@ const updateLead = async (req, res, next) => {
       queryFilter, 
       req.body,
       {
-        new: true,
+        returnDocument: "after",
         runValidators: true, 
       }
     );

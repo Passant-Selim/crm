@@ -31,6 +31,10 @@ const createTeam = async (req, res, next) => {
         _id: { $in: agents },
       });
 
+      if (agentUsers.length !== agents.length) {
+        return next(new AppError("One or more assigned agents do not exist", 404));
+      }
+
       for (const agent of agentUsers) {
         if (agent.role !== "agent") {
           return next(new AppError(`${agent.name} is not an agent`, 400));
@@ -50,6 +54,10 @@ const createTeam = async (req, res, next) => {
           $in: dataEntries,
         },
       });
+
+      if (entries.length !== dataEntries.length) {
+        return next(new AppError("One or more assigned data entries do not exist", 404));
+      }
 
       for (const entry of entries) {
         if (entry.role !== "data-entry") {

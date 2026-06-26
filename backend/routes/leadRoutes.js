@@ -35,7 +35,7 @@ router.post(
 router.patch(
   "/:id",
   authMiddleware,
-  authorize("super-admin", "data-entry"),
+  authorize("super-admin", "data-entry", "agent", "team-leader"),
   updateLead
 );
 

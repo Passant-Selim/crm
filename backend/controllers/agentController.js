@@ -73,12 +73,12 @@ const updateAgent = async (req, res, next) => {
     if (req.body.team) {
       if (checkAgent.team) {
         await Team.findByIdAndUpdate(checkAgent.team, {
-          $pull: { agents: checkAgent._id }, // $pull بتحذف الـ ID من المصفوفة
+          $pull: { agents: checkAgent._id }, 
         });
       }
 
       await Team.findByIdAndUpdate(req.body.team, {
-        $addToSet: { agents: checkAgent._id }, // $addToSet بتضيف الـ ID وتمنع التكرار
+        $addToSet: { agents: checkAgent._id }, 
       });
     }
 
